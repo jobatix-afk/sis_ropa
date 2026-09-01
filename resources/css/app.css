@@ -9,6 +9,8 @@
 @import './producto-form.css';
 @import './clientes.css';
 @import './cliente-form.css';
+@import './pos.css';
+@import './factura.css';
 
 :root {
     --color-primary: #18181b;
