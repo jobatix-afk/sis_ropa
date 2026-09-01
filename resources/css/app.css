@@ -1,9 +1,10 @@
 /* =========================================================
    ESTILOS GENERALES DEL SISTEMA
-   POS - Tienda de Ropa
+   POS - TiENDA DE ROPA
    ========================================================= */
 
-
+@import './navigation.css';
+@import './dashboard.css';
 @import './productos.css';
 @import './producto-form.css';
 
