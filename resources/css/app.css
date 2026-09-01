@@ -7,6 +7,8 @@
 @import './dashboard.css';
 @import './productos.css';
 @import './producto-form.css';
+@import './clientes.css';
+@import './cliente-form.css';
 
 :root {
     --color-primary: #18181b;

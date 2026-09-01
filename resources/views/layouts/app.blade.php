@@ -107,7 +107,10 @@
             </a>
 
 
-            {{-- Navegación principal --}}
+            {{-- =================================================
+                 PRINCIPAL
+                 ================================================= --}}
+
             <div class="sidebar-section">
 
                 <span class="sidebar-section-title">
@@ -116,6 +119,8 @@
 
                 <nav class="sidebar-nav">
 
+
+                    {{-- Dashboard --}}
                     <a
                         href="{{ route('dashboard') }}"
                         class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
@@ -132,6 +137,7 @@
                     </a>
 
 
+                    {{-- Productos --}}
                     <a
                         href="{{ route('productos.index') }}"
                         class="sidebar-link {{ request()->routeIs('productos.*') ? 'active' : '' }}"
@@ -152,7 +158,10 @@
             </div>
 
 
-            {{-- Próximos módulos --}}
+            {{-- =================================================
+                 GESTIÓN
+                 ================================================= --}}
+
             <div class="sidebar-section">
 
                 <span class="sidebar-section-title">
@@ -161,7 +170,12 @@
 
                 <nav class="sidebar-nav">
 
-                    <div class="sidebar-link opacity-50">
+
+                    {{-- Clientes --}}
+                    <a
+                        href="{{ route('clientes.index') }}"
+                        class="sidebar-link {{ request()->routeIs('clientes.*') ? 'active' : '' }}"
+                    >
 
                         <span class="sidebar-icon">
                             <i class="bi bi-people-fill"></i>
@@ -171,9 +185,10 @@
                             Clientes
                         </span>
 
-                    </div>
+                    </a>
 
 
+                    {{-- Punto de Venta - Próximamente --}}
                     <div class="sidebar-link opacity-50">
 
                         <span class="sidebar-icon">
@@ -187,6 +202,7 @@
                     </div>
 
 
+                    {{-- Reportes - Próximamente --}}
                     <div class="sidebar-link opacity-50">
 
                         <span class="sidebar-icon">
@@ -204,7 +220,10 @@
             </div>
 
 
-            {{-- Usuario --}}
+            {{-- =================================================
+                 USUARIO
+                 ================================================= --}}
+
             <div class="sidebar-user">
 
                 <div class="sidebar-user-info">
@@ -233,6 +252,7 @@
                 </div>
 
 
+                {{-- Logout --}}
                 <form
                     method="POST"
                     action="{{ route('logout') }}"
@@ -258,7 +278,10 @@
         </aside>
 
 
-        {{-- Overlay para móvil --}}
+        {{-- =====================================================
+             OVERLAY MÓVIL
+             ===================================================== --}}
+
         <div
             class="sidebar-overlay"
             id="sidebarOverlay"
@@ -277,11 +300,14 @@
 
                 <div class="d-flex align-items-center gap-3">
 
+
+                    {{-- Botón menú móvil --}}
                     <button
                         type="button"
                         class="mobile-menu-button"
                         id="mobileMenuButton"
                         aria-label="Abrir menú"
+                        aria-expanded="false"
                     >
 
                         <i class="bi bi-list"></i>
@@ -289,6 +315,7 @@
                     </button>
 
 
+                    {{-- Título página --}}
                     <h2 class="topbar-title">
                         @yield('page-title', 'Sistema POS')
                     </h2>
@@ -296,6 +323,7 @@
                 </div>
 
 
+                {{-- Usuario --}}
                 <div class="topbar-user">
 
                     <i class="bi bi-person-circle me-1"></i>
@@ -335,7 +363,10 @@
 
 
 
-{{-- Bootstrap JS --}}
+{{-- =========================================================
+     BOOTSTRAP JAVASCRIPT
+     ========================================================= --}}
+
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 ></script>
