@@ -38,7 +38,7 @@
     >
 
 
-    {{-- Bootstrap --}}
+    {{-- Bootstrap 5 --}}
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -86,9 +86,7 @@
         >
 
             <div class="sidebar-logo">
-
                 <i class="bi bi-bag-heart-fill"></i>
-
             </div>
 
 
@@ -128,9 +126,7 @@
                 >
 
                     <span class="sidebar-icon">
-
                         <i class="bi bi-grid-1x2-fill"></i>
-
                     </span>
 
                     <span class="sidebar-link-text">
@@ -147,9 +143,7 @@
                 >
 
                     <span class="sidebar-icon">
-
                         <i class="bi bi-box-seam-fill"></i>
-
                     </span>
 
                     <span class="sidebar-link-text">
@@ -184,9 +178,7 @@
                 >
 
                     <span class="sidebar-icon">
-
                         <i class="bi bi-people-fill"></i>
-
                     </span>
 
                     <span class="sidebar-link-text">
@@ -203,9 +195,7 @@
                 >
 
                     <span class="sidebar-icon">
-
                         <i class="bi bi-cart-check-fill"></i>
-
                     </span>
 
                     <span class="sidebar-link-text">
@@ -215,20 +205,25 @@
                 </a>
 
 
-                {{-- Reportes --}}
-                <div class="sidebar-link opacity-50">
+                {{-- Reportes: solo Administrador --}}
+                @if(auth()->user()->esAdministrador())
 
-                    <span class="sidebar-icon">
+                    <a
+                        href="{{ route('reportes.index') }}"
+                        class="sidebar-link {{ request()->routeIs('reportes.*') ? 'active' : '' }}"
+                    >
 
-                        <i class="bi bi-bar-chart-fill"></i>
+                        <span class="sidebar-icon">
+                            <i class="bi bi-bar-chart-fill"></i>
+                        </span>
 
-                    </span>
+                        <span class="sidebar-link-text">
+                            Reportes
+                        </span>
 
-                    <span class="sidebar-link-text">
-                        Reportes
-                    </span>
+                    </a>
 
-                </div>
+                @endif
 
             </nav>
 
@@ -236,7 +231,7 @@
 
 
         {{-- =================================================
-             USUARIO
+             INFORMACIÓN DEL USUARIO
              ================================================= --}}
 
         <div class="sidebar-user">
@@ -265,7 +260,17 @@
 
                     <span class="sidebar-user-role">
 
-                        {{ ucfirst(auth()->user()->rol) }}
+                        @if(auth()->user()->esAdministrador())
+
+                            <i class="bi bi-shield-check me-1"></i>
+                            Administrador
+
+                        @else
+
+                            <i class="bi bi-person-badge me-1"></i>
+                            Cajero
+
+                        @endif
 
                     </span>
 
@@ -317,7 +322,6 @@
     <main class="app-main">
 
 
-        {{-- Barra superior --}}
         <header class="app-topbar">
 
 
@@ -348,7 +352,16 @@
 
             <div class="topbar-user">
 
-                <i class="bi bi-person-circle me-1"></i>
+                @if(auth()->user()->esAdministrador())
+
+                    <i class="bi bi-shield-check me-1"></i>
+
+                @else
+
+                    <i class="bi bi-person-badge me-1"></i>
+
+                @endif
+
 
                 {{ auth()->user()->nombre }}
 
@@ -379,7 +392,6 @@
 
 
 @endauth
-
 
 
 {{-- Bootstrap JavaScript --}}

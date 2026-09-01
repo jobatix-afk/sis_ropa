@@ -8,6 +8,7 @@
 
 <div class="dashboard-page">
 
+
     {{-- =====================================================
          BIENVENIDA
          ===================================================== --}}
@@ -19,14 +20,181 @@
         </span>
 
         <h1 class="dashboard-title">
+
             ¡Hola, {{ auth()->user()->nombre }}!
+
         </h1>
 
         <p class="dashboard-subtitle">
-            Aquí tienes un resumen del inventario de tu tienda.
+
+            @if(auth()->user()->esAdministrador())
+
+                Aquí tienes un resumen general del inventario
+                y actividad de la tienda.
+
+            @else
+
+                Aquí puedes consultar el inventario
+                y acceder rápidamente al punto de venta.
+
+            @endif
+
         </p>
 
     </div>
+
+
+    {{-- =====================================================
+         CLIMA - OPENWEATHER
+         ===================================================== --}}
+
+    @if($clima)
+
+        <section class="weather-card">
+
+
+            <div class="weather-main">
+
+                <span class="weather-eyebrow">
+
+                    <i class="bi bi-cloud-sun-fill"></i>
+
+                    Clima actual
+
+                </span>
+
+
+                <h2 class="weather-location">
+
+                    {{ $clima['ubicacion'] }}
+
+                </h2>
+
+
+                <p class="weather-description">
+
+                    {{ $clima['descripcion'] }}
+
+                </p>
+
+
+                <div class="weather-temperature-area">
+
+                    @if($clima['icono'])
+
+                        <img
+                            src="https://openweathermap.org/img/wn/{{ $clima['icono'] }}@2x.png"
+                            alt="{{ $clima['descripcion'] }}"
+                            class="weather-icon"
+                        >
+
+                    @endif
+
+
+                    <span class="weather-temperature">
+
+                        {{ $clima['temperatura'] }}°
+
+                    </span>
+
+                </div>
+
+
+                <span class="weather-api-label">
+
+                    <i class="bi bi-cloud-arrow-down"></i>
+
+                    Datos proporcionados por OpenWeather
+
+                </span>
+
+            </div>
+
+
+            <div class="weather-details">
+
+
+                <div class="weather-detail">
+
+                    <i class="bi bi-thermometer-half weather-detail-icon"></i>
+
+                    <span class="weather-detail-label">
+                        Sensación
+                    </span>
+
+                    <span class="weather-detail-value">
+
+                        {{ $clima['sensacion'] }} °C
+
+                    </span>
+
+                </div>
+
+
+                <div class="weather-detail">
+
+                    <i class="bi bi-droplet-fill weather-detail-icon"></i>
+
+                    <span class="weather-detail-label">
+                        Humedad
+                    </span>
+
+                    <span class="weather-detail-value">
+
+                        {{ $clima['humedad'] }}%
+
+                    </span>
+
+                </div>
+
+
+                <div class="weather-detail">
+
+                    <i class="bi bi-wind weather-detail-icon"></i>
+
+                    <span class="weather-detail-label">
+                        Viento
+                    </span>
+
+                    <span class="weather-detail-value">
+
+                        {{ $clima['viento'] }} km/h
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    @elseif($climaError)
+
+        <div class="weather-error">
+
+            <div class="weather-error-icon">
+
+                <i class="bi bi-cloud-slash-fill"></i>
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Información del clima no disponible
+                </strong>
+
+                <div>
+                    {{ $climaError }}
+                </div>
+
+            </div>
+
+        </div>
+
+    @endif
 
 
     {{-- =====================================================
@@ -44,8 +212,13 @@
                 Tienes
 
                 <strong>
+
                     {{ $stockBajo }}
-                    {{ $stockBajo === 1 ? 'producto' : 'productos' }}
+
+                    {{ $stockBajo === 1
+                        ? 'producto'
+                        : 'productos' }}
+
                 </strong>
 
                 con menos de 5 unidades disponibles.
@@ -63,7 +236,8 @@
 
     <div class="row g-3 mb-4">
 
-        {{-- Total productos --}}
+
+        {{-- Productos registrados --}}
         <div class="col-6 col-xl">
 
             <div class="dashboard-stat-card">
@@ -71,17 +245,25 @@
                 <div class="dashboard-stat-top">
 
                     <div class="dashboard-stat-icon">
+
                         <i class="bi bi-box-seam-fill"></i>
+
                     </div>
 
                 </div>
 
+
                 <h3 class="dashboard-stat-value">
+
                     {{ $totalProductos }}
+
                 </h3>
 
+
                 <span class="dashboard-stat-label">
+
                     Productos registrados
+
                 </span>
 
             </div>
@@ -89,7 +271,7 @@
         </div>
 
 
-        {{-- Activos --}}
+        {{-- Productos activos --}}
         <div class="col-6 col-xl">
 
             <div class="dashboard-stat-card">
@@ -97,17 +279,25 @@
                 <div class="dashboard-stat-top">
 
                     <div class="dashboard-stat-icon success">
+
                         <i class="bi bi-check-circle-fill"></i>
+
                     </div>
 
                 </div>
 
+
                 <h3 class="dashboard-stat-value">
+
                     {{ $productosActivos }}
+
                 </h3>
 
+
                 <span class="dashboard-stat-label">
+
                     Productos activos
+
                 </span>
 
             </div>
@@ -123,17 +313,25 @@
                 <div class="dashboard-stat-top">
 
                     <div class="dashboard-stat-icon danger">
+
                         <i class="bi bi-exclamation-triangle-fill"></i>
+
                     </div>
 
                 </div>
 
+
                 <h3 class="dashboard-stat-value">
+
                     {{ $stockBajo }}
+
                 </h3>
 
+
                 <span class="dashboard-stat-label">
+
                     Con stock bajo
+
                 </span>
 
             </div>
@@ -149,17 +347,25 @@
                 <div class="dashboard-stat-top">
 
                     <div class="dashboard-stat-icon info">
+
                         <i class="bi bi-tags-fill"></i>
+
                     </div>
 
                 </div>
 
+
                 <h3 class="dashboard-stat-value">
+
                     {{ $totalCategorias }}
+
                 </h3>
 
+
                 <span class="dashboard-stat-label">
+
                     Categorías
+
                 </span>
 
             </div>
@@ -167,7 +373,7 @@
         </div>
 
 
-        {{-- Valor inventario --}}
+        {{-- Valor del inventario --}}
         <div class="col-12 col-xl">
 
             <div class="dashboard-stat-card">
@@ -175,17 +381,28 @@
                 <div class="dashboard-stat-top">
 
                     <div class="dashboard-stat-icon warning">
+
                         <i class="bi bi-cash-stack"></i>
+
                     </div>
 
                 </div>
 
+
                 <h3 class="dashboard-stat-value">
-                    Q{{ number_format($valorInventario, 2) }}
+
+                    Q{{ number_format(
+                        $valorInventario,
+                        2
+                    ) }}
+
                 </h3>
 
+
                 <span class="dashboard-stat-label">
+
                     Valor del inventario
+
                 </span>
 
             </div>
@@ -196,35 +413,46 @@
 
 
     {{-- =====================================================
-         SEGUNDA FILA
+         PRODUCTOS RECIENTES + ACCESOS
          ===================================================== --}}
 
     <div class="row g-4">
+
 
         {{-- Productos recientes --}}
         <div class="col-lg-7">
 
             <div class="dashboard-panel">
 
+
                 <div class="dashboard-panel-header">
 
                     <div>
 
                         <h2 class="dashboard-panel-title">
+
                             Productos recientes
+
                         </h2>
 
+
                         <p class="dashboard-panel-subtitle">
-                            Últimos productos agregados al inventario
+
+                            Últimos productos agregados
+                            al inventario
+
                         </p>
 
                     </div>
+
 
                     <a
                         href="{{ route('productos.index') }}"
                         class="btn btn-sm btn-outline-dark"
                     >
+
                         Ver todos
+
                     </a>
 
                 </div>
@@ -237,10 +465,14 @@
                         class="dashboard-product text-decoration-none"
                     >
 
+
                         @if($producto->imagen_url)
 
                             <img
-                                src="{{ asset('storage/' . $producto->imagen_url) }}"
+                                src="{{ asset(
+                                    'storage/' .
+                                    $producto->imagen_url
+                                ) }}"
                                 alt="{{ $producto->nombre }}"
                                 class="dashboard-product-image"
                             >
@@ -248,7 +480,9 @@
                         @else
 
                             <div class="dashboard-product-image">
+
                                 👕
+
                             </div>
 
                         @endif
@@ -257,15 +491,21 @@
                         <div class="dashboard-product-info">
 
                             <span class="dashboard-product-name">
+
                                 {{ $producto->nombre }}
+
                             </span>
+
 
                             <span class="dashboard-product-meta">
 
                                 {{ $producto->codigo }}
 
                                 @if($producto->categoria)
-                                    · {{ $producto->categoria->nombre }}
+
+                                    ·
+                                    {{ $producto->categoria->nombre }}
+
                                 @endif
 
                             </span>
@@ -274,10 +514,16 @@
 
 
                         <span class="dashboard-product-price">
-                            Q{{ number_format($producto->precio, 2) }}
+
+                            Q{{ number_format(
+                                $producto->precio,
+                                2
+                            ) }}
+
                         </span>
 
                     </a>
+
 
                 @empty
 
@@ -296,21 +542,30 @@
         </div>
 
 
-        {{-- Accesos rápidos --}}
+        {{-- =================================================
+             ACCESOS RÁPIDOS
+             ================================================= --}}
+
         <div class="col-lg-5">
 
             <div class="dashboard-panel">
+
 
                 <div class="dashboard-panel-header">
 
                     <div>
 
                         <h2 class="dashboard-panel-title">
+
                             Accesos rápidos
+
                         </h2>
 
+
                         <p class="dashboard-panel-subtitle">
-                            Funciones frecuentes del sistema
+
+                            Funciones disponibles para tu usuario
+
                         </p>
 
                     </div>
@@ -320,95 +575,278 @@
 
                 <div class="dashboard-actions">
 
-                    <a
-                        href="{{ route('productos.create') }}"
-                        class="dashboard-action"
-                    >
 
-                        <span class="dashboard-action-icon">
-                            <i class="bi bi-plus-lg"></i>
-                        </span>
+                    {{-- =====================================
+                         ADMINISTRADOR
+                         ===================================== --}}
 
-                        <div>
+                    @if(auth()->user()->esAdministrador())
 
-                            <span class="dashboard-action-title">
-                                Nuevo producto
+
+                        {{-- Nuevo producto --}}
+                        <a
+                            href="{{ route('productos.create') }}"
+                            class="dashboard-action"
+                        >
+
+                            <span class="dashboard-action-icon">
+
+                                <i class="bi bi-plus-lg"></i>
+
                             </span>
 
-                            <span class="dashboard-action-description">
-                                Agregar al inventario
+
+                            <div>
+
+                                <span class="dashboard-action-title">
+
+                                    Nuevo producto
+
+                                </span>
+
+                                <span class="dashboard-action-description">
+
+                                    Agregar al inventario
+
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        {{-- Inventario --}}
+                        <a
+                            href="{{ route('productos.index') }}"
+                            class="dashboard-action"
+                        >
+
+                            <span class="dashboard-action-icon">
+
+                                <i class="bi bi-box-seam"></i>
+
                             </span>
 
-                        </div>
 
-                    </a>
+                            <div>
+
+                                <span class="dashboard-action-title">
+
+                                    Inventario
+
+                                </span>
+
+                                <span class="dashboard-action-description">
+
+                                    Administrar productos
+
+                                </span>
+
+                            </div>
+
+                        </a>
 
 
-                    <a
-                        href="{{ route('productos.index') }}"
-                        class="dashboard-action"
-                    >
+                        {{-- Nueva venta --}}
+                        <a
+                            href="{{ route('ventas.create') }}"
+                            class="dashboard-action"
+                        >
 
-                        <span class="dashboard-action-icon">
-                            <i class="bi bi-box-seam"></i>
-                        </span>
+                            <span class="dashboard-action-icon">
 
-                        <div>
+                                <i class="bi bi-cart-plus"></i>
 
-                            <span class="dashboard-action-title">
-                                Inventario
                             </span>
 
-                            <span class="dashboard-action-description">
-                                Consultar productos
+
+                            <div>
+
+                                <span class="dashboard-action-title">
+
+                                    Nueva venta
+
+                                </span>
+
+                                <span class="dashboard-action-description">
+
+                                    Abrir punto de venta
+
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        {{-- Reportes --}}
+                        <a
+                            href="{{ route('reportes.index') }}"
+                            class="dashboard-action"
+                        >
+
+                            <span class="dashboard-action-icon">
+
+                                <i class="bi bi-bar-chart"></i>
+
                             </span>
 
-                        </div>
 
-                    </a>
+                            <div>
+
+                                <span class="dashboard-action-title">
+
+                                    Reportes
+
+                                </span>
+
+                                <span class="dashboard-action-description">
+
+                                    Consultar estadísticas
+
+                                </span>
+
+                            </div>
+
+                        </a>
 
 
-                    {{-- Estos se activarán cuando existan --}}
-                    <div class="dashboard-action opacity-50">
+                    {{-- =====================================
+                         CAJERO
+                         ===================================== --}}
 
-                        <span class="dashboard-action-icon">
-                            <i class="bi bi-cart-plus"></i>
-                        </span>
+                    @else
 
-                        <div>
 
-                            <span class="dashboard-action-title">
-                                Nueva venta
+                        {{-- Nueva venta --}}
+                        <a
+                            href="{{ route('ventas.create') }}"
+                            class="dashboard-action"
+                        >
+
+                            <span class="dashboard-action-icon">
+
+                                <i class="bi bi-cart-plus"></i>
+
                             </span>
 
-                            <span class="dashboard-action-description">
-                                Próximamente
+
+                            <div>
+
+                                <span class="dashboard-action-title">
+
+                                    Nueva venta
+
+                                </span>
+
+                                <span class="dashboard-action-description">
+
+                                    Abrir punto de venta
+
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        {{-- Productos --}}
+                        <a
+                            href="{{ route('productos.index') }}"
+                            class="dashboard-action"
+                        >
+
+                            <span class="dashboard-action-icon">
+
+                                <i class="bi bi-box-seam"></i>
+
                             </span>
 
-                        </div>
 
-                    </div>
+                            <div>
+
+                                <span class="dashboard-action-title">
+
+                                    Productos
+
+                                </span>
+
+                                <span class="dashboard-action-description">
+
+                                    Consultar inventario
+
+                                </span>
+
+                            </div>
+
+                        </a>
 
 
-                    <div class="dashboard-action opacity-50">
+                        {{-- Clientes --}}
+                        <a
+                            href="{{ route('clientes.index') }}"
+                            class="dashboard-action"
+                        >
 
-                        <span class="dashboard-action-icon">
-                            <i class="bi bi-bar-chart"></i>
-                        </span>
+                            <span class="dashboard-action-icon">
 
-                        <div>
+                                <i class="bi bi-people"></i>
 
-                            <span class="dashboard-action-title">
-                                Reportes
                             </span>
 
-                            <span class="dashboard-action-description">
-                                Próximamente
+
+                            <div>
+
+                                <span class="dashboard-action-title">
+
+                                    Clientes
+
+                                </span>
+
+                                <span class="dashboard-action-description">
+
+                                    Gestionar clientes
+
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        {{-- Otra venta --}}
+                        <a
+                            href="{{ route('ventas.create') }}"
+                            class="dashboard-action"
+                        >
+
+                            <span class="dashboard-action-icon">
+
+                                <i class="bi bi-cash-coin"></i>
+
                             </span>
 
-                        </div>
 
-                    </div>
+                            <div>
+
+                                <span class="dashboard-action-title">
+
+                                    Caja
+
+                                </span>
+
+                                <span class="dashboard-action-description">
+
+                                    Registrar una venta
+
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                    @endif
 
                 </div>
 

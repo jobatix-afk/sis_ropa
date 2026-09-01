@@ -4,7 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\VentaController;
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
@@ -62,6 +64,7 @@ Route::middleware('auth')->group(function () {
 
     /* =====================================================
        DASHBOARD
+       ADMINISTRADOR + CAJERO
        ===================================================== */
 
     Route::get(
@@ -72,16 +75,72 @@ Route::middleware('auth')->group(function () {
 
     /* =====================================================
        PRODUCTOS
+       CONSULTA: ADMINISTRADOR + CAJERO
        ===================================================== */
 
-    Route::resource(
-        'productos',
-        ProductoController::class
-    );
+    Route::get(
+        '/productos',
+        [ProductoController::class, 'index']
+    )->name('productos.index');
+
+
+    /*
+     * IMPORTANTE:
+     * Las rutas administrativas se colocan antes
+     * de /productos/{producto}.
+     */
+    Route::middleware(
+        RoleMiddleware::class . ':administrador'
+    )->group(function () {
+
+
+        Route::get(
+            '/productos/create',
+            [ProductoController::class, 'create']
+        )->name('productos.create');
+
+
+        Route::post(
+            '/productos',
+            [ProductoController::class, 'store']
+        )->name('productos.store');
+
+
+        Route::get(
+            '/productos/{producto}/edit',
+            [ProductoController::class, 'edit']
+        )->name('productos.edit');
+
+
+        Route::put(
+            '/productos/{producto}',
+            [ProductoController::class, 'update']
+        )->name('productos.update');
+
+
+        Route::patch(
+            '/productos/{producto}',
+            [ProductoController::class, 'update']
+        );
+
+
+        Route::delete(
+            '/productos/{producto}',
+            [ProductoController::class, 'destroy']
+        )->name('productos.destroy');
+
+    });
+
+
+    Route::get(
+        '/productos/{producto}',
+        [ProductoController::class, 'show']
+    )->name('productos.show');
 
 
     /* =====================================================
        CLIENTES
+       ADMINISTRADOR + CAJERO
        ===================================================== */
 
     Route::resource(
@@ -92,23 +151,21 @@ Route::middleware('auth')->group(function () {
 
     /* =====================================================
        PUNTO DE VENTA
+       ADMINISTRADOR + CAJERO
        ===================================================== */
 
-    // Pantalla principal del POS
     Route::get(
         '/pos',
         [VentaController::class, 'create']
     )->name('ventas.create');
 
 
-    // Registrar una venta
     Route::post(
         '/ventas',
         [VentaController::class, 'store']
     )->name('ventas.store');
 
 
-    // Mostrar factura / recibo
     Route::get(
         '/ventas/{venta}',
         [VentaController::class, 'show']
@@ -116,7 +173,24 @@ Route::middleware('auth')->group(function () {
 
 
     /* =====================================================
-       CERRAR SESIÓN
+       REPORTES
+       SOLO ADMINISTRADOR
+       ===================================================== */
+
+    Route::middleware(
+        RoleMiddleware::class . ':administrador'
+    )->group(function () {
+
+        Route::get(
+            '/reportes',
+            [ReporteController::class, 'index']
+        )->name('reportes.index');
+
+    });
+
+
+    /* =====================================================
+       LOGOUT
        ===================================================== */
 
     Route::post(

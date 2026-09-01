@@ -11,6 +11,7 @@
 @import './cliente-form.css';
 @import './pos.css';
 @import './factura.css';
+@import './weather.css';
 
 :root {
     --color-primary: #18181b;

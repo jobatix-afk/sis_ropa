@@ -1,52 +1,80 @@
+import './reportes';
+
+
 /* =========================================================
    NAVEGACIÓN RESPONSIVE
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const sidebar = document.getElementById('appSidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    const menuButton = document.getElementById('mobileMenuButton');
+    const sidebar =
+        document.getElementById('appSidebar');
 
-    if (sidebar && overlay && menuButton) {
+    const overlay =
+        document.getElementById('sidebarOverlay');
+
+    const menuButton =
+        document.getElementById('mobileMenuButton');
+
+
+    if (
+        sidebar &&
+        overlay &&
+        menuButton
+    ) {
 
         const openSidebar = () => {
 
             sidebar.classList.add('show');
+
             overlay.classList.add('show');
 
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow =
+                'hidden';
 
             menuButton.setAttribute(
                 'aria-expanded',
                 'true'
             );
+
         };
 
 
         const closeSidebar = () => {
 
             sidebar.classList.remove('show');
+
             overlay.classList.remove('show');
 
-            document.body.style.overflow = '';
+            document.body.style.overflow =
+                '';
 
             menuButton.setAttribute(
                 'aria-expanded',
                 'false'
             );
+
         };
 
 
-        menuButton.addEventListener('click', () => {
+        menuButton.addEventListener(
+            'click',
+            () => {
 
-            if (sidebar.classList.contains('show')) {
-                closeSidebar();
-            } else {
-                openSidebar();
+                if (
+                    sidebar.classList.contains('show')
+                ) {
+
+                    closeSidebar();
+
+                } else {
+
+                    openSidebar();
+
+                }
+
             }
-
-        });
+        );
 
 
         overlay.addEventListener(
@@ -55,49 +83,60 @@ document.addEventListener('DOMContentLoaded', () => {
         );
 
 
-        document.addEventListener('keydown', (event) => {
+        document.addEventListener(
+            'keydown',
+            (event) => {
 
-            if (
-                event.key === 'Escape' &&
-                sidebar.classList.contains('show')
-            ) {
-                closeSidebar();
+                if (
+                    event.key === 'Escape' &&
+                    sidebar.classList.contains('show')
+                ) {
+
+                    closeSidebar();
+
+                }
+
             }
-
-        });
+        );
 
 
         sidebar
             .querySelectorAll('a.sidebar-link')
             .forEach((link) => {
 
-                link.addEventListener('click', () => {
+                link.addEventListener(
+                    'click',
+                    () => {
 
-                    if (window.innerWidth < 992) {
-                        closeSidebar();
+                        if (
+                            window.innerWidth < 992
+                        ) {
+
+                            closeSidebar();
+
+                        }
+
                     }
-
-                });
+                );
 
             });
 
 
-        window.addEventListener('resize', () => {
+        window.addEventListener(
+            'resize',
+            () => {
 
-            if (window.innerWidth >= 992) {
+                if (
+                    window.innerWidth >= 992
+                ) {
 
-                sidebar.classList.remove('show');
-                overlay.classList.remove('show');
+                    closeSidebar();
 
-                document.body.style.overflow = '';
+                }
 
-                menuButton.setAttribute(
-                    'aria-expanded',
-                    'false'
-                );
             }
+        );
 
-        });
     }
 
 
@@ -108,49 +147,79 @@ document.addEventListener('DOMContentLoaded', () => {
     const posForm =
         document.getElementById('posForm');
 
+
+    /*
+     * Si no estamos en el POS, terminamos aquí.
+     */
     if (!posForm) {
         return;
     }
 
 
     const productCards =
-        document.querySelectorAll('.pos-product-card');
+        document.querySelectorAll(
+            '.pos-product-card'
+        );
 
     const searchInput =
-        document.getElementById('posProductSearch');
+        document.getElementById(
+            'posProductSearch'
+        );
 
     const noResults =
-        document.getElementById('posNoResults');
+        document.getElementById(
+            'posNoResults'
+        );
 
     const cartItemsContainer =
-        document.getElementById('posCartItems');
+        document.getElementById(
+            'posCartItems'
+        );
 
     const cartEmpty =
-        document.getElementById('posCartEmpty');
+        document.getElementById(
+            'posCartEmpty'
+        );
 
     const cartCount =
-        document.getElementById('posCartCount');
+        document.getElementById(
+            'posCartCount'
+        );
 
     const hiddenInputs =
-        document.getElementById('posHiddenInputs');
+        document.getElementById(
+            'posHiddenInputs'
+        );
 
     const subtotalElement =
-        document.getElementById('posSubtotal');
+        document.getElementById(
+            'posSubtotal'
+        );
 
     const ivaElement =
-        document.getElementById('posIva');
+        document.getElementById(
+            'posIva'
+        );
 
     const discountElement =
-        document.getElementById('posDiscount');
+        document.getElementById(
+            'posDiscount'
+        );
 
     const totalElement =
-        document.getElementById('posTotal');
+        document.getElementById(
+            'posTotal'
+        );
 
     const discountInput =
-        document.getElementById('descuento');
+        document.getElementById(
+            'descuento'
+        );
 
     const checkoutButton =
-        document.getElementById('posCheckoutButton');
+        document.getElementById(
+            'posCheckoutButton'
+        );
 
 
     let cart = [];
@@ -174,13 +243,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =====================================================
+       SEGURIDAD PARA TEXTO HTML
+       ===================================================== */
+
+    const escapeHtml = (text) => {
+
+        const div =
+            document.createElement('div');
+
+        div.textContent =
+            text ?? '';
+
+        return div.innerHTML;
+
+    };
+
+
+    /* =====================================================
        AGREGAR PRODUCTO
        ===================================================== */
 
     const addProduct = (card) => {
 
         const id =
-            Number(card.dataset.productId);
+            Number(
+                card.dataset.productId
+            );
 
         const name =
             card.dataset.productName;
@@ -189,27 +277,35 @@ document.addEventListener('DOMContentLoaded', () => {
             card.dataset.productCode;
 
         const price =
-            Number(card.dataset.productPrice);
+            Number(
+                card.dataset.productPrice
+            );
 
         const stock =
-            Number(card.dataset.productStock);
+            Number(
+                card.dataset.productStock
+            );
 
 
         const existing =
             cart.find(
-                item => item.id === id
+                item =>
+                    item.id === id
             );
 
 
         if (existing) {
 
-            if (existing.quantity >= stock) {
+            if (
+                existing.quantity >= stock
+            ) {
 
                 alert(
                     `No hay más existencias disponibles de ${name}.`
                 );
 
                 return;
+
             }
 
 
@@ -218,18 +314,21 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
 
             cart.push({
+
                 id,
                 name,
                 code,
                 price,
                 stock,
                 quantity: 1
+
             });
 
         }
 
 
         renderCart();
+
     };
 
 
@@ -244,7 +343,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const item =
             cart.find(
-                product => product.id === id
+                product =>
+                    product.id === id
             );
 
 
@@ -257,21 +357,27 @@ document.addEventListener('DOMContentLoaded', () => {
             item.quantity + amount;
 
 
-        if (newQuantity <= 0) {
+        if (
+            newQuantity <= 0
+        ) {
 
             removeProduct(id);
 
             return;
+
         }
 
 
-        if (newQuantity > item.stock) {
+        if (
+            newQuantity > item.stock
+        ) {
 
             alert(
                 `Solo hay ${item.stock} unidades disponibles de ${item.name}.`
             );
 
             return;
+
         }
 
 
@@ -280,6 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         renderCart();
+
     };
 
 
@@ -291,169 +398,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cart =
             cart.filter(
-                item => item.id !== id
+                item =>
+                    item.id !== id
             );
 
 
         renderCart();
-    };
 
-
-    /* =====================================================
-       RENDERIZAR CARRITO
-       ===================================================== */
-
-    const renderCart = () => {
-
-        cartItemsContainer.innerHTML = '';
-
-        hiddenInputs.innerHTML = '';
-
-
-        if (cart.length === 0) {
-
-            cartItemsContainer.appendChild(
-                cartEmpty
-            );
-
-            cartEmpty.style.display = 'block';
-
-            checkoutButton.disabled = true;
-
-        } else {
-
-            cartEmpty.style.display = 'none';
-
-            checkoutButton.disabled = false;
-
-        }
-
-
-        let quantityTotal = 0;
-
-
-        cart.forEach((item, index) => {
-
-            quantityTotal += item.quantity;
-
-
-            const row =
-                document.createElement('div');
-
-            row.className =
-                'pos-cart-item';
-
-
-            row.innerHTML = `
-                <div>
-
-                    <span class="pos-cart-item-name">
-                        ${escapeHtml(item.name)}
-                    </span>
-
-                    <span class="pos-cart-item-price">
-                        ${escapeHtml(item.code)}
-                        · Q${money(item.price)} c/u
-                    </span>
-
-                    <div class="pos-cart-controls">
-
-                        <button
-                            type="button"
-                            class="pos-quantity-button"
-                            data-action="minus"
-                            data-id="${item.id}"
-                        >
-                            <i class="bi bi-dash"></i>
-                        </button>
-
-                        <span class="pos-quantity-value">
-                            ${item.quantity}
-                        </span>
-
-                        <button
-                            type="button"
-                            class="pos-quantity-button"
-                            data-action="plus"
-                            data-id="${item.id}"
-                        >
-                            <i class="bi bi-plus"></i>
-                        </button>
-
-                        <button
-                            type="button"
-                            class="pos-remove-item"
-                            data-action="remove"
-                            data-id="${item.id}"
-                            title="Eliminar"
-                        >
-                            <i class="bi bi-trash"></i>
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <div class="pos-cart-item-subtotal">
-
-                    Q${money(
-                        item.price *
-                        item.quantity
-                    )}
-
-                </div>
-            `;
-
-
-            cartItemsContainer.appendChild(
-                row
-            );
-
-
-            /*
-             * Inputs enviados a Laravel.
-             */
-
-            const productInput =
-                document.createElement('input');
-
-            productInput.type = 'hidden';
-
-            productInput.name =
-                `items[${index}][producto_id]`;
-
-            productInput.value =
-                item.id;
-
-
-            const quantityInput =
-                document.createElement('input');
-
-            quantityInput.type = 'hidden';
-
-            quantityInput.name =
-                `items[${index}][cantidad]`;
-
-            quantityInput.value =
-                item.quantity;
-
-
-            hiddenInputs.appendChild(
-                productInput
-            );
-
-            hiddenInputs.appendChild(
-                quantityInput
-            );
-
-        });
-
-
-        cartCount.textContent =
-            quantityTotal;
-
-
-        calculateTotals();
     };
 
 
@@ -478,29 +429,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         let discount =
-            Number(discountInput.value) || 0;
+            Number(
+                discountInput.value
+            ) || 0;
 
 
-        if (discount < 0) {
+        if (
+            discount < 0
+        ) {
+
             discount = 0;
+
         }
 
 
-        const beforeDiscount =
+        const totalBeforeDiscount =
             subtotal + iva;
 
 
-        if (discount > beforeDiscount) {
-
-            discount =
-                beforeDiscount;
-
-        }
+        const visualDiscount =
+            Math.min(
+                discount,
+                totalBeforeDiscount
+            );
 
 
         const total =
             Math.max(
-                beforeDiscount - discount,
+                totalBeforeDiscount -
+                visualDiscount,
                 0
             );
 
@@ -514,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         discountElement.textContent =
-            `- Q${money(discount)}`;
+            `- Q${money(visualDiscount)}`;
 
 
         totalElement.textContent =
@@ -524,57 +481,242 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =====================================================
-       ESCAPAR TEXTO
+       RENDERIZAR CARRITO
        ===================================================== */
 
-    const escapeHtml = (text) => {
+    const renderCart = () => {
 
-        const div =
-            document.createElement('div');
+        cartItemsContainer.innerHTML =
+            '';
 
-        div.textContent =
-            text;
+        hiddenInputs.innerHTML =
+            '';
 
-        return div.innerHTML;
+
+        if (
+            cart.length === 0
+        ) {
+
+            cartEmpty.style.display =
+                'block';
+
+            cartItemsContainer.appendChild(
+                cartEmpty
+            );
+
+            checkoutButton.disabled =
+                true;
+
+        } else {
+
+            cartEmpty.style.display =
+                'none';
+
+            checkoutButton.disabled =
+                false;
+
+        }
+
+
+        let quantityTotal = 0;
+
+
+        cart.forEach(
+            (item, index) => {
+
+                quantityTotal +=
+                    item.quantity;
+
+
+                const row =
+                    document.createElement(
+                        'div'
+                    );
+
+
+                row.className =
+                    'pos-cart-item';
+
+
+                row.innerHTML = `
+
+                    <div>
+
+                        <span class="pos-cart-item-name">
+                            ${escapeHtml(item.name)}
+                        </span>
+
+                        <span class="pos-cart-item-price">
+
+                            ${escapeHtml(item.code)}
+                            ·
+                            Q${money(item.price)}
+                            c/u
+
+                        </span>
+
+
+                        <div class="pos-cart-controls">
+
+                            <button
+                                type="button"
+                                class="pos-quantity-button"
+                                data-action="minus"
+                                data-id="${item.id}"
+                            >
+
+                                <i class="bi bi-dash"></i>
+
+                            </button>
+
+
+                            <span class="pos-quantity-value">
+
+                                ${item.quantity}
+
+                            </span>
+
+
+                            <button
+                                type="button"
+                                class="pos-quantity-button"
+                                data-action="plus"
+                                data-id="${item.id}"
+                            >
+
+                                <i class="bi bi-plus"></i>
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="pos-remove-item"
+                                data-action="remove"
+                                data-id="${item.id}"
+                                title="Eliminar"
+                            >
+
+                                <i class="bi bi-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="pos-cart-item-subtotal">
+
+                        Q${money(
+                            item.price *
+                            item.quantity
+                        )}
+
+                    </div>
+
+                `;
+
+
+                cartItemsContainer.appendChild(
+                    row
+                );
+
+
+                /* Producto */
+                const productInput =
+                    document.createElement(
+                        'input'
+                    );
+
+                productInput.type =
+                    'hidden';
+
+                productInput.name =
+                    `items[${index}][producto_id]`;
+
+                productInput.value =
+                    item.id;
+
+
+                /* Cantidad */
+                const quantityInput =
+                    document.createElement(
+                        'input'
+                    );
+
+                quantityInput.type =
+                    'hidden';
+
+                quantityInput.name =
+                    `items[${index}][cantidad]`;
+
+                quantityInput.value =
+                    item.quantity;
+
+
+                hiddenInputs.appendChild(
+                    productInput
+                );
+
+                hiddenInputs.appendChild(
+                    quantityInput
+                );
+
+            }
+        );
+
+
+        cartCount.textContent =
+            quantityTotal;
+
+
+        calculateTotals();
 
     };
 
 
     /* =====================================================
-       CLIC PRODUCTOS
+       EVENTOS PRODUCTOS
        ===================================================== */
 
-    productCards.forEach((card) => {
+    productCards.forEach(
+        (card) => {
 
-        card.addEventListener(
-            'click',
-            () => addProduct(card)
-        );
-
-
-        card.addEventListener(
-            'keydown',
-            (event) => {
-
-                if (
-                    event.key === 'Enter' ||
-                    event.key === ' '
-                ) {
-
-                    event.preventDefault();
+            card.addEventListener(
+                'click',
+                () => {
 
                     addProduct(card);
 
                 }
+            );
 
-            }
-        );
 
-    });
+            card.addEventListener(
+                'keydown',
+                (event) => {
+
+                    if (
+                        event.key === 'Enter' ||
+                        event.key === ' '
+                    ) {
+
+                        event.preventDefault();
+
+                        addProduct(card);
+
+                    }
+
+                }
+            );
+
+        }
+    );
 
 
     /* =====================================================
-       BOTONES CARRITO
+       EVENTOS CARRITO
        ===================================================== */
 
     cartItemsContainer.addEventListener(
@@ -593,13 +735,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             const id =
-                Number(button.dataset.id);
+                Number(
+                    button.dataset.id
+                );
+
 
             const action =
                 button.dataset.action;
 
 
-            if (action === 'plus') {
+            if (
+                action === 'plus'
+            ) {
 
                 changeQuantity(
                     id,
@@ -609,7 +756,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
 
-            if (action === 'minus') {
+            if (
+                action === 'minus'
+            ) {
 
                 changeQuantity(
                     id,
@@ -619,7 +768,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
 
-            if (action === 'remove') {
+            if (
+                action === 'remove'
+            ) {
 
                 removeProduct(id);
 
@@ -643,37 +794,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     .toLowerCase();
 
 
-            let visible =
-                0;
+            let visible = 0;
 
 
-            productCards.forEach((card) => {
+            productCards.forEach(
+                (card) => {
 
-                const name =
-                    card.dataset.productName
-                        .toLowerCase();
-
-                const code =
-                    card.dataset.productCode
-                        .toLowerCase();
+                    const name =
+                        card.dataset.productName
+                            .toLowerCase();
 
 
-                const matches =
-                    name.includes(term) ||
-                    code.includes(term);
+                    const code =
+                        card.dataset.productCode
+                            .toLowerCase();
 
 
-                card.style.display =
-                    matches
-                        ? ''
-                        : 'none';
+                    const matches =
+                        name.includes(term) ||
+                        code.includes(term);
 
 
-                if (matches) {
-                    visible++;
+                    card.style.display =
+                        matches
+                            ? ''
+                            : 'none';
+
+
+                    if (matches) {
+                        visible++;
+                    }
+
                 }
-
-            });
+            );
 
 
             noResults.style.display =
@@ -703,7 +856,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'submit',
         (event) => {
 
-            if (cart.length === 0) {
+            if (
+                cart.length === 0
+            ) {
 
                 event.preventDefault();
 
@@ -712,6 +867,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
 
                 return;
+
             }
 
 
@@ -751,6 +907,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
 
                 return;
+
             }
 
 
@@ -759,11 +916,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             checkoutButton.innerHTML = `
+
                 <span
                     class="spinner-border spinner-border-sm"
                 ></span>
 
                 Procesando venta...
+
             `;
 
         }

@@ -2,287 +2,379 @@
 
 @section('title', 'Detalle del Producto')
 
+@section('page-title', 'Productos')
+
 @section('content')
 
 <div class="container py-5 productos-page">
 
-    <div class="row justify-content-center">
 
-        <div class="col-12 col-xl-10">
+    {{-- =====================================================
+         ENCABEZADO
+         ===================================================== --}}
 
-            {{-- Encabezado --}}
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 productos-header">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 productos-header">
 
-                <div>
+        <div>
 
-                    <span class="productos-eyebrow">
-                        Inventario
-                    </span>
+            <span class="productos-eyebrow">
+                Inventario
+            </span>
 
-                    <h1 class="productos-title">
-                        Detalle del producto
-                    </h1>
+            <h1 class="productos-title">
+                Detalle del producto
+            </h1>
 
-                    <p class="productos-subtitle mb-0">
-                        Consulta la información completa de la prenda o accesorio seleccionado.
-                    </p>
+            <p class="productos-subtitle mb-0">
+                Consulta la información registrada del producto.
+            </p>
 
-                </div>
+        </div>
 
-                <div class="d-flex flex-column flex-sm-row gap-2">
 
-                    <a
-                        href="{{ route('productos.index') }}"
-                        class="btn-producto-cancel"
-                    >
-                        ← Volver
-                    </a>
+        <div class="d-flex flex-wrap gap-2">
 
-                    <a
-                        href="{{ route('productos.edit', $producto) }}"
-                        class="btn-producto-primary"
-                    >
-                        Editar producto
-                    </a>
+
+            {{-- Volver: disponible para todos --}}
+            <a
+                href="{{ route('productos.index') }}"
+                class="btn btn-outline-secondary"
+            >
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Volver
+
+            </a>
+
+
+            {{-- Editar: SOLO ADMINISTRADOR --}}
+            @if(auth()->user()->esAdministrador())
+
+                <a
+                    href="{{ route('productos.edit', $producto) }}"
+                    class="btn btn-dark"
+                >
+
+                    <i class="bi bi-pencil me-1"></i>
+
+                    Editar producto
+
+                </a>
+
+            @endif
+
+        </div>
+
+    </div>
+
+
+    {{-- =====================================================
+         DETALLE
+         ===================================================== --}}
+
+    <div class="productos-card">
+
+        <div class="row g-0">
+
+
+            {{-- =================================================
+                 IMAGEN
+                 ================================================= --}}
+
+            <div class="col-lg-5">
+
+                <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light">
+
+                    @if($producto->imagen_url)
+
+                        <img
+                            src="{{ asset('storage/' . $producto->imagen_url) }}"
+                            alt="{{ $producto->nombre }}"
+                            class="img-fluid rounded-4"
+                            style="
+                                max-height: 430px;
+                                width: 100%;
+                                object-fit: contain;
+                            "
+                        >
+
+                    @else
+
+                        <div
+                            class="d-flex flex-column align-items-center justify-content-center text-muted"
+                            style="min-height: 350px;"
+                        >
+
+                            <div
+                                class="producto-sin-imagen mb-3"
+                                style="
+                                    width: 90px;
+                                    height: 90px;
+                                    font-size: 2.5rem;
+                                "
+                            >
+                                👕
+                            </div>
+
+                            <span>
+                                Sin imagen registrada
+                            </span>
+
+                        </div>
+
+                    @endif
 
                 </div>
 
             </div>
 
 
-            <div class="producto-form-card">
+            {{-- =================================================
+                 INFORMACIÓN
+                 ================================================= --}}
 
-                <div class="producto-form-section">
+            <div class="col-lg-7">
 
-                    <div class="row g-5 align-items-start">
+                <div class="p-4 p-lg-5">
 
-                        {{-- Imagen --}}
-                        <div class="col-lg-4">
 
-                            @if($producto->imagen_url)
+                    {{-- Código --}}
+                    <div class="mb-2">
 
-                                <img
-                                    src="{{ asset('storage/' . $producto->imagen_url) }}"
-                                    alt="{{ $producto->nombre }}"
-                                    class="img-fluid w-100 rounded-4 shadow-sm"
-                                >
+                        <span class="producto-codigo">
 
-                            @else
+                            {{ $producto->codigo }}
 
-                                <div class="producto-image-upload">
+                        </span>
 
-                                    <span class="producto-image-icon">
-                                        👕
-                                    </span>
+                    </div>
 
-                                    <div class="producto-image-title">
-                                        Sin imagen
-                                    </div>
 
-                                    <div class="producto-image-description mb-0">
-                                        Este producto todavía no tiene una fotografía registrada.
-                                    </div>
+                    {{-- Nombre --}}
+                    <h2 class="fw-bold mb-2">
 
-                                </div>
+                        {{ $producto->nombre }}
 
-                            @endif
+                    </h2>
+
+
+                    {{-- Categoría --}}
+                    <p class="text-muted mb-4">
+
+                        <i class="bi bi-tag me-1"></i>
+
+                        {{ $producto->categoria->nombre ?? 'Sin categoría' }}
+
+                    </p>
+
+
+                    {{-- Precio --}}
+                    <div class="mb-4">
+
+                        <span class="text-muted small d-block mb-1">
+                            Precio
+                        </span>
+
+                        <span
+                            class="fw-bold"
+                            style="font-size: 1.8rem;"
+                        >
+
+                            Q{{ number_format($producto->precio, 2) }}
+
+                        </span>
+
+                    </div>
+
+
+                    {{-- Estado y stock --}}
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+
+
+                        @if($producto->activo)
+
+                            <span class="badge text-bg-success producto-badge">
+
+                                <i class="bi bi-check-circle me-1"></i>
+
+                                Activo
+
+                            </span>
+
+                        @else
+
+                            <span class="badge text-bg-secondary producto-badge">
+
+                                Inactivo
+
+                            </span>
+
+                        @endif
+
+
+                        @if($producto->stock_bajo)
+
+                            <span class="badge text-bg-danger producto-badge">
+
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+
+                                Stock bajo:
+                                {{ $producto->stock }} unidades
+
+                            </span>
+
+
+                        @elseif($producto->stock <= 10)
+
+                            <span class="badge text-bg-warning producto-badge">
+
+                                {{ $producto->stock }} unidades
+
+                            </span>
+
+
+                        @else
+
+                            <span class="badge text-bg-success producto-badge">
+
+                                {{ $producto->stock }} unidades disponibles
+
+                            </span>
+
+                        @endif
+
+                    </div>
+
+
+                    {{-- =================================================
+                         DATOS
+                         ================================================= --}}
+
+                    <div class="row g-3 mb-4">
+
+
+                        <div class="col-sm-6">
+
+                            <div class="p-3 bg-light rounded-3 h-100">
+
+                                <span class="text-muted small d-block mb-1">
+                                    Talla
+                                </span>
+
+                                <strong>
+
+                                    {{ $producto->talla ?: 'No aplica' }}
+
+                                </strong>
+
+                            </div>
 
                         </div>
 
 
-                        {{-- Información --}}
-                        <div class="col-lg-8">
+                        <div class="col-sm-6">
 
-                            <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-4">
+                            <div class="p-3 bg-light rounded-3 h-100">
 
-                                <div>
-
-                                    <h2 class="fw-bold mb-1">
-                                        {{ $producto->nombre }}
-                                    </h2>
-
-                                    <span class="producto-codigo">
-                                        {{ $producto->codigo }}
-                                    </span>
-
-                                </div>
-
-                                <div>
-
-                                    @if($producto->activo)
-
-                                        <span class="badge text-bg-success producto-badge">
-                                            Activo
-                                        </span>
-
-                                    @else
-
-                                        <span class="badge text-bg-secondary producto-badge">
-                                            Inactivo
-                                        </span>
-
-                                    @endif
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="row g-3 mb-4">
-
-                                <div class="col-sm-6 col-md-4">
-
-                                    <div class="producto-mobile-field">
-
-                                        <span class="producto-mobile-label">
-                                            Precio
-                                        </span>
-
-                                        <span class="producto-mobile-value">
-                                            Q{{ number_format($producto->precio, 2) }}
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-
-                                <div class="col-sm-6 col-md-4">
-
-                                    <div class="producto-mobile-field">
-
-                                        <span class="producto-mobile-label">
-                                            Stock
-                                        </span>
-
-                                        <span class="producto-mobile-value">
-
-                                            @if($producto->stock_bajo)
-
-                                                <span class="text-danger">
-                                                    {{ $producto->stock }} unidades
-                                                </span>
-
-                                            @elseif($producto->stock <= 10)
-
-                                                <span class="text-warning">
-                                                    {{ $producto->stock }} unidades
-                                                </span>
-
-                                            @else
-
-                                                <span class="text-success">
-                                                    {{ $producto->stock }} unidades
-                                                </span>
-
-                                            @endif
-
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-
-                                <div class="col-sm-6 col-md-4">
-
-                                    <div class="producto-mobile-field">
-
-                                        <span class="producto-mobile-label">
-                                            Categoría
-                                        </span>
-
-                                        <span class="producto-mobile-value">
-                                            {{ $producto->categoria->nombre ?? 'Sin categoría' }}
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-
-                                <div class="col-sm-6 col-md-4">
-
-                                    <div class="producto-mobile-field">
-
-                                        <span class="producto-mobile-label">
-                                            Talla
-                                        </span>
-
-                                        <span class="producto-mobile-value">
-                                            {{ $producto->talla ?: 'No aplica' }}
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-
-                                <div class="col-sm-6 col-md-4">
-
-                                    <div class="producto-mobile-field">
-
-                                        <span class="producto-mobile-label">
-                                            Color
-                                        </span>
-
-                                        <span class="producto-mobile-value">
-                                            {{ $producto->color ?: 'No especificado' }}
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-
-                                <div class="col-sm-6 col-md-4">
-
-                                    <div class="producto-mobile-field">
-
-                                        <span class="producto-mobile-label">
-                                            Género
-                                        </span>
-
-                                        <span class="producto-mobile-value">
-
-                                            @if($producto->genero === 'nino')
-                                                Niño
-                                            @elseif($producto->genero === 'nina')
-                                                Niña
-                                            @elseif($producto->genero)
-                                                {{ ucfirst($producto->genero) }}
-                                            @else
-                                                No aplica
-                                            @endif
-
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <div>
-
-                                <span class="producto-mobile-label mb-2">
-                                    Descripción
+                                <span class="text-muted small d-block mb-1">
+                                    Color
                                 </span>
 
-                                <div class="p-3 rounded-3 bg-light">
+                                <strong>
 
-                                    <p class="mb-0 text-secondary">
-                                        {{ $producto->descripcion ?: 'Este producto no tiene una descripción registrada.' }}
-                                    </p>
+                                    {{ $producto->color ?: 'No especificado' }}
 
-                                </div>
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-sm-6">
+
+                            <div class="p-3 bg-light rounded-3 h-100">
+
+                                <span class="text-muted small d-block mb-1">
+                                    Género
+                                </span>
+
+                                <strong>
+
+                                    {{ $producto->genero
+                                        ? ucfirst($producto->genero)
+                                        : 'No especificado' }}
+
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-sm-6">
+
+                            <div class="p-3 bg-light rounded-3 h-100">
+
+                                <span class="text-muted small d-block mb-1">
+                                    Categoría
+                                </span>
+
+                                <strong>
+
+                                    {{ $producto->categoria->nombre ?? 'Sin categoría' }}
+
+                                </strong>
 
                             </div>
 
                         </div>
 
                     </div>
+
+
+                    {{-- =================================================
+                         DESCRIPCIÓN
+                         ================================================= --}}
+
+                    <div>
+
+                        <h3
+                            class="fw-bold mb-2"
+                            style="font-size: 0.9rem;"
+                        >
+                            Descripción
+                        </h3>
+
+                        <p class="text-muted mb-0">
+
+                            {{ $producto->descripcion
+                                ?: 'Este producto no tiene una descripción registrada.' }}
+
+                        </p>
+
+                    </div>
+
+
+                    {{-- =================================================
+                         INFORMACIÓN SEGÚN ROL
+                         ================================================= --}}
+
+                    @if(auth()->user()->esCajero())
+
+                        <div
+                            class="alert alert-light border mt-4 mb-0"
+                            role="alert"
+                        >
+
+                            <i class="bi bi-eye me-2"></i>
+
+                            Estás consultando este producto en modo de solo lectura.
+
+                        </div>
+
+                    @endif
 
                 </div>
 
