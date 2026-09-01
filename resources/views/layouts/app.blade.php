@@ -399,6 +399,26 @@
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 ></script>
 
+@auth
+
+<script>
+    window.addEventListener('pageshow', function (event) {
+
+        /*
+         * Si el navegador restauró una pantalla anterior
+         * desde memoria, volvemos a consultar al servidor.
+         *
+         * Si la sesión ya fue cerrada, middleware auth
+         * enviará automáticamente al Login.
+         */
+        if (event.persisted) {
+            window.location.reload();
+        }
+
+    });
+</script>
+
+@endauth
 
 </body>
 

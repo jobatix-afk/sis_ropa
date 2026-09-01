@@ -8,6 +8,7 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\VentaController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\NoCacheMiddleware;
 
 
 /* =========================================================
@@ -59,7 +60,10 @@ Route::middleware('guest')->group(function () {
    RUTAS PROTEGIDAS
    ========================================================= */
 
-Route::middleware('auth')->group(function () {
+Route::middleware([
+    'auth',
+    NoCacheMiddleware::class,
+])->group(function () {
 
 
     /* =====================================================
