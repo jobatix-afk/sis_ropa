@@ -932,3 +932,44 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCart();
 
 });
+
+/* =========================================================
+   MOSTRAR / OCULTAR CONTRASEÑA - LOGIN
+   ========================================================= */
+
+const passwordInput = document.getElementById('password');
+const togglePassword = document.getElementById('togglePassword');
+const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+
+if (
+    passwordInput &&
+    togglePassword &&
+    togglePasswordIcon
+) {
+
+    togglePassword.addEventListener('click', () => {
+
+        const mostrando =
+            passwordInput.type === 'text';
+
+        passwordInput.type =
+            mostrando
+                ? 'password'
+                : 'text';
+
+        togglePasswordIcon.className =
+            mostrando
+                ? 'bi bi-eye'
+                : 'bi bi-eye-slash';
+
+
+        togglePassword.setAttribute(
+            'aria-label',
+            mostrando
+                ? 'Mostrar contraseña'
+                : 'Ocultar contraseña'
+        );
+
+    });
+
+}

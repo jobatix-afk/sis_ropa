@@ -12,6 +12,8 @@
 @import './pos.css';
 @import './factura.css';
 @import './weather.css';
+@import './login.css';
+@import './auth.css';
 
 :root {
     --color-primary: #18181b;
